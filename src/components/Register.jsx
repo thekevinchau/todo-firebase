@@ -10,16 +10,17 @@ SETTING UP THE AUTH COMPONENT:
 import { useState } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
-export default function Auth() {
+import { useNavigate } from "react-router-dom";
+export default function Register() {
   //need a state for email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const register = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      console.log(auth);
+      navigate('/');
     } catch (e) {
       console.error(e);
     }
@@ -27,8 +28,8 @@ export default function Auth() {
 
   return (
     <div>
-      <input onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-      <input onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+      <input onChange={(e) => setEmail(e.target.value)} placeholder="Email" required/>
+      <input onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
       <button onClick={register}>Register</button>
     </div>
   );
