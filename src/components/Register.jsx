@@ -1,18 +1,9 @@
-/*
-
-SETTING UP THE AUTH COMPONENT:
-
-- We first import auth from the firecase config. We also need to createWithEmailAndPassword from the firebase sdk.
-    - When this happens, we know that we're now authenticated and we should redirect to the users' page with their tasks.
-        - Authentication is true once we click "login" and false if it has not been clicked.
-        - There should be a button for logging out which is in the Firebase SDK and this theoretically logs the user out and sets auth to false.
-*/
 import { useState } from "react";
 import { auth } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+
 export default function Register() {
-  //need a state for email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -27,10 +18,31 @@ export default function Register() {
   };
 
   return (
-    <div>
-      <input onChange={(e) => setEmail(e.target.value)} placeholder="Email" required/>
-      <input onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-      <button onClick={register}>Register</button>
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-2xl font-semibold text-center mb-6">Register</h2>
+        <input
+          type="email"
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+          className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+          className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          onClick={register}
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
+        >
+          Register
+        </button>
+        <p className="mt-1">Already a user? <a href="/" className="underline">Log in</a></p>
+      </div>
     </div>
   );
 }
