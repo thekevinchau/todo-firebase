@@ -30,34 +30,46 @@ export default function TaskBox(props) {
 
   const addTask = async () => {
     if (!newTask.trim()) return; // Prevent adding empty tasks
-    const docRef = await addDoc(usersTasksCollectionRef, {
+    const taskData = {
       task_name: newTask,
       completed: false,
       time_created: new Date(),
       time_complete: null,
-    });
-    console.log(`Task with ID ${docRef.id} has been added!`);
-    setNewTask(""); // Clear the input after adding the task
+    };
+
+    try {
+      const docRef = await addDoc(usersTasksCollectionRef, taskData);
+      console.log(`Task with ID ${docRef.id} has been added!`);
+      setUserTasks((prevTasks) => [
+        ...prevTasks,
+        { ...taskData, id: docRef.id }, // Optimistically update the UI
+      ]);
+      setNewTask(""); // Clear the input after adding the task
+    } catch (e) {
+      console.error("Error adding task", e);
+    }
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const querySnapshot = await getDocs(usersTasksCollectionRef);
+      const parsedData = querySnapshot.docs.map((task) => ({
+        ...task.data(),
+        id: task.id,
+      }));
+      setUserTasks(parsedData);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const querySnapshot = await getDocs(usersTasksCollectionRef);
-        const parsedData = querySnapshot.docs.map((task) => ({
-          ...task.data(),
-          id: task.id,
-        }));
-        setUserTasks(parsedData);
-      } catch (e) {
-        console.error(e);
-      }
-    };
+    console.log('fetching tasks')
     fetchTasks();
   }, []);
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold text-gray-800">Your Tasks</h2>
         <button
@@ -83,9 +95,9 @@ export default function TaskBox(props) {
           Add Task
         </button>
       </div>
-      <div className="overflow-y-auto max-h-60 border border-gray-600 rounded-md">
+      <div className="overflow-y-auto max-h-72">
         {userTasks.length > 0 ? (
-          userTasks.map((task, key) => <ToDo key={key} task={task} userID={props.userID}/>)
+          userTasks.map((task, key) => <ToDo key={key} task={task} userID={props.userID} fetchTasks={fetchTasks}/>)
         ) : (
           <p className="text-gray-600 text-center">No tasks available.</p>
         )}
