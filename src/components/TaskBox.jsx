@@ -54,7 +54,7 @@ export default function TaskBox(props) {
       }
     };
     fetchTasks();
-  }, [usersTasksCollectionRef]);
+  }, []);
 
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
@@ -85,7 +85,7 @@ export default function TaskBox(props) {
       </div>
       <div className="overflow-y-auto max-h-60 border border-gray-600 rounded-md">
         {userTasks.length > 0 ? (
-          userTasks.map((task, key) => <ToDo key={key} task={task} />)
+          userTasks.map((task, key) => <ToDo key={key} task={task} userID={props.userID}/>)
         ) : (
           <p className="text-gray-600 text-center">No tasks available.</p>
         )}

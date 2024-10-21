@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import { db } from "../config/firebase";
-import {deleteDoc } from "firebase/firestore";
+import {deleteDoc, doc } from "firebase/firestore";
 
 export default function ToDo(props) {
-
   return (
     <div className="flex justify-between items-center bg-gray-100 border border-gray-300 rounded-lg p-4 mb-4 shadow-sm">
       <div className="flex flex-col">
